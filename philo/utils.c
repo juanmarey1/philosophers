@@ -1,14 +1,29 @@
 #include "inc/philo.h"
 
+int	ft_strncmp(const char *s1, const char *s2)
+{
+	unsigned int	i;
+
+	i = 0;
+	while (s1[i] != '\0' && s2[i] != '\0' && s1[i] == s2[i])
+		i++;
+	return ((unsigned char)s1[i] - (unsigned char)s2[i]);
+}
+
 void	ft_destroy_data(t_data *data)
 {
 	int	i;
 
 	i = -1;
 	while (++i < data->philo_num)
+	{
 		pthread_mutex_destroy(&data->forks[i]);
+		pthread_mutex_destroy(&data->eat_mutex[i]);
+	}
 	pthread_mutex_destroy(&data->write);
-	pthread_mutex_destroy(&data->eat);
+	pthread_mutex_destroy(&data->init);
+	if (data->eat_mutex)
+		free(data->eat_mutex);
 	if (data->philo_threads)
 		free(data->philo_threads);
 	if (data->philos)
@@ -25,7 +40,7 @@ int	ft_error(char *str, t_data	*data)
 	return (1);
 }
 
-int	get_current_time(void)
+size_t	get_current_time(void)
 {
 	struct timeval	time;
 
@@ -35,11 +50,11 @@ int	get_current_time(void)
 		+ (time.tv_usec / 1000));
 }
 
-void	ft_usleep(int	time)
+void	ft_usleep(size_t	time, t_data *data)
 {
-	int	start;
+	size_t	start;
 
 	start = get_current_time();
 	while ((get_current_time() - start) < time)
-		usleep(500);
+		usleep(data->philo_num * 2);
 }

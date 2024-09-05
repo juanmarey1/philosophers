@@ -24,7 +24,7 @@ int	main(int argc, char *argv[])
 		return (1);
 	if (init_all(argv, &data))
 		return (1);
-	if (init_thread(&data))
+	if (init_threads(&data))
 		return (1);
 	ft_destroy_data(&data);
 	return (0);

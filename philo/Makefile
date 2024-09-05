@@ -2,9 +2,9 @@ NAME = philo
 
 CC = gcc
 RM = rm -rf
-CFLAGS = -Wall -Wextra -Werror #-fsanitize=address -g
+CFLAGS = -Wall -Wextra -Werror -g3 -fsanitize=address -g
 
-SOURCES = main.c atoi_philo.c utils.c philo_init.c threads_routine.c
+SOURCES = main.c atoi_philo.c utils.c philo_init.c threads_routine.c actions.c
 OBJECTS = $(SOURCES:.c=.o)
 
 INCLUDE = -I inc
