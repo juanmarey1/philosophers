@@ -1,4 +1,16 @@
-#ifndef	PHILO_H
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   philo.h                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jrey-roj <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/09/16 12:17:06 by jrey-roj          #+#    #+#             */
+/*   Updated: 2024/09/16 12:17:07 by jrey-roj         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#ifndef PHILO_H
 # define PHILO_H
 
 # include <stdio.h>
@@ -21,7 +33,7 @@
 # define THINK "is thinking"
 # define DEAD "died"
 
-struct s_data;
+struct	s_data;
 
 typedef struct s_philo
 {
@@ -33,10 +45,10 @@ typedef struct s_philo
 	size_t			last_ate;
 	pthread_mutex_t	*r_fork;
 	pthread_mutex_t	*l_fork;
-	pthread_mutex_t *eat;
+	pthread_mutex_t	*eat;
 }	t_philo;
 
-typedef struct	s_data
+typedef struct s_data
 {
 	int				init_mutex;
 	int				philo_num;
@@ -53,25 +65,26 @@ typedef struct	s_data
 	pthread_mutex_t	init;
 	pthread_mutex_t	*forks;
 	pthread_mutex_t	write;
-	pthread_mutex_t *eat_mutex;
+	pthread_mutex_t	*eat_mutex;
 }	t_data;
 
 void	ft_destroy_data(t_data *data);
 int		ft_error(char *str, t_data	*data);
 
-int	check_num(char *num, int index);
+int		check_num(char *num, int index);
 
-int	ft_atoi(char *str);
-int	ft_strncmp(const char *s1, const char *s2);
+int		ft_atoi(char *str);
+int		ft_strncmp(const char *s1, const char *s2);
 
 size_t	get_current_time(void);
 void	ft_usleep(size_t	time, t_data *data);
 void	ft_eat(t_philo *philo);
 
-int	init_all(char **argv, t_data *data);
-int	init_one_philo(t_data *data);
+int		init_all(char **argv, t_data *data);
+int		init_one_philo(t_data *data);
 
 int		init_threads(t_data *data);
 void	ft_messages(char *str, t_philo *philo);
+void	ft_wait_for_all_threads(t_data *data);
 
 #endif

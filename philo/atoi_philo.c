@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   atoi_philo.c                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jrey-roj <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/09/16 12:17:45 by jrey-roj          #+#    #+#             */
+/*   Updated: 2024/09/16 12:17:47 by jrey-roj         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "inc/philo.h"
 
 int	check_special_cases(long n, int index)
@@ -8,7 +20,8 @@ int	check_special_cases(long n, int index)
 		return (ft_error(INVALID_ARG, NULL));
 	if (index == 1 && n > 200)
 		return (ft_error(INVALID_ARG, NULL));
-	if ((index == 2 && n < 60) || (index == 3 && n < 60) || (index == 4 && n < 60))
+	if ((index == 2 && n < 60) || (index == 3 && n < 60)
+		|| (index == 4 && n < 60))
 		return (ft_error(INVALID_ARG, NULL));
 	return (0);
 }

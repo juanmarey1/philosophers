@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   philo_init.c                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jrey-roj <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/09/16 12:17:30 by jrey-roj          #+#    #+#             */
+/*   Updated: 2024/09/16 12:17:32 by jrey-roj         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "inc/philo.h"
 
 void	init_philo(t_data *data)
@@ -18,12 +30,10 @@ void	init_philo(t_data *data)
 	pthread_mutex_init(&data->init, NULL);
 }
 
-int	init_forks(t_data *data)
+int	init_eat_mutex(t_data *data)
 {
-	int	i;
-
-	i = -1;
-	data->eat_mutex = (pthread_mutex_t *)malloc(sizeof(pthread_mutex_t) * data->philo_num);
+	data->eat_mutex = (pthread_mutex_t *)malloc(sizeof(pthread_mutex_t)
+			* data->philo_num);
 	if (!data->eat_mutex)
 	{
 		free(data->philos);
@@ -31,7 +41,17 @@ int	init_forks(t_data *data)
 		free(data->philo_threads);
 		return (ft_error(MALLOC_ERR, NULL));
 	}
-	while(++i < data->philo_num)
+	return (0);
+}
+
+int	init_forks(t_data *data)
+{
+	int	i;
+
+	i = -1;
+	if (init_eat_mutex(data))
+		return (1);
+	while (++i < data->philo_num)
 	{
 		pthread_mutex_init(&(data->forks[i]), NULL);
 		pthread_mutex_init(&(data->eat_mutex[i]), NULL);
@@ -52,13 +72,15 @@ int	init_alloc(t_data *data)
 	data->philos = (t_philo *)malloc(sizeof(t_philo) * data->philo_num);
 	if (!data->philos)
 		return (ft_error(MALLOC_ERR, NULL));
-	data->forks = (pthread_mutex_t *)malloc(sizeof(pthread_mutex_t) * data->philo_num);
+	data->forks = (pthread_mutex_t *)malloc(sizeof(pthread_mutex_t)
+			* data->philo_num);
 	if (!data->forks)
 	{
 		free(data->philos);
 		return (ft_error(MALLOC_ERR, NULL));
 	}
-	data->philo_threads = (pthread_t *)malloc(sizeof(pthread_t) * data->philo_num);
+	data->philo_threads = (pthread_t *)malloc(sizeof(pthread_t)
+			* data->philo_num);
 	if (!data->philo_threads)
 	{
 		free(data->forks);

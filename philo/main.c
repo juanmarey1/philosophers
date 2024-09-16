@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   main.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jrey-roj <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/09/16 12:17:52 by jrey-roj          #+#    #+#             */
+/*   Updated: 2024/09/16 12:17:54 by jrey-roj         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "inc/philo.h"
 
 int	check_args(int argc, char **argv)
@@ -24,6 +36,11 @@ int	main(int argc, char *argv[])
 		return (1);
 	if (init_all(argv, &data))
 		return (1);
+	if (data.meals_to_eat == 0)
+	{
+		ft_destroy_data(&data);
+		return (0);
+	}
 	if (data.philo_num == 1)
 	{
 		if (init_one_philo(&data))
@@ -34,17 +51,6 @@ int	main(int argc, char *argv[])
 		if (init_threads(&data))
 			return (1);
 	}
-	for (int i = 0; i < data.philo_num; i++)
-	{
-		printf("%d\n", data.philos[i].meals_count);
-	}
-	
 	ft_destroy_data(&data);
 	return (0);
 }
-
-/*
-1. Comprobar argumentos y crear funcion de error
-2. Iniciar mallocs, mutex y philo
-3. 
-*/

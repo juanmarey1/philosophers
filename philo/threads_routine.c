@@ -1,15 +1,40 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   threads_routine.c                                  :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jrey-roj <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/09/16 12:18:01 by jrey-roj          #+#    #+#             */
+/*   Updated: 2024/09/16 12:18:02 by jrey-roj         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "inc/philo.h"
 
-int	init_one_philo(t_data *data)
+void	*routine_one_philo(void	*data_in_void)
 {
-	int	time;
+	t_data	*data;
+	int		time;
 
-	data->start_t = get_current_time();
+	data = (t_data *)data_in_void;
 	time = get_current_time() - data->start_t;
 	printf("%d %d %s\n", time, data->philos[0].id, FORK);
 	ft_usleep(data->death_t, data);
 	time = get_current_time() - data->start_t;
 	printf("%d %d %s\n", time, data->philos[0].id, DEAD);
+	return ((void *)0);
+}
+
+int	init_one_philo(t_data *data)
+{
+	pthread_t	t_one_philo;
+
+	data->start_t = get_current_time();
+	if (pthread_create(&t_one_philo, NULL, &routine_one_philo, data))
+		ft_error(ERR_PHILO, data);
+	if (pthread_join(t_one_philo, NULL))
+		ft_error(ERR_JOIN, data);
 	return (0);
 }
 
@@ -19,17 +44,17 @@ void	*monitor(void	*data)
 	int		j;
 
 	supervisor = (t_data *)data;
-	pthread_mutex_lock(&supervisor->init);
-	while (supervisor->init_mutex)
-		;
-	pthread_mutex_unlock(&supervisor->init);
-	while (supervisor->dead == 0 && supervisor->finished < supervisor->philo_num)
+	ft_wait_for_all_threads(supervisor);
+	while (supervisor->dead == 0 && supervisor->finished
+		< supervisor->philo_num)
 	{
 		j = -1;
-		while ((++j < supervisor->philo_num && supervisor->dead == 0) && (supervisor->finished < supervisor->philo_num))
+		while ((++j < supervisor->philo_num && supervisor->dead == 0)
+			&& (supervisor->finished < supervisor->philo_num))
 		{
 			pthread_mutex_lock(supervisor->philos[j].eat);
-			if (((get_current_time() - supervisor->philos[j].last_ate) > supervisor->death_t) && supervisor->philos[j].eating != 1)
+			if (((get_current_time() - supervisor->philos[j].last_ate)
+					> supervisor->death_t) && supervisor->philos[j].eating != 1)
 			{
 				supervisor->dead = 1;
 				ft_messages(DEAD, &supervisor->philos[j]);
@@ -45,13 +70,11 @@ void	*routine(void	*argv)
 	t_philo	*philo;
 
 	philo = (t_philo *)argv;
-	pthread_mutex_lock(&philo->data->init);
-	while (philo->data->init_mutex)
-		;
-	pthread_mutex_unlock(&philo->data->init);
+	ft_wait_for_all_threads(philo->data);
 	if (philo->id % 2 == 0)
 		ft_usleep(philo->data->eat_t / 2, philo->data);
-	while (philo->data->dead == 0 && philo->data->finished < philo->data->philo_num)
+	while (philo->data->dead == 0 && philo->data->finished
+		< philo->data->philo_num)
 	{
 		if (philo->meals_count == philo->data->meals_to_eat)
 			break ;
@@ -73,7 +96,8 @@ int	init_threads(t_data *data)
 	while (++i < data->philo_num)
 	{
 		data->philos[i].last_ate = get_current_time();
-		if (pthread_create(&(data->philo_threads[i]), NULL, &routine, &data->philos[i]))
+		if (pthread_create(&(data->philo_threads[i]),
+				NULL, &routine, &data->philos[i]))
 			ft_error(ERR_PHILO, data);
 	}
 	data->start_t = get_current_time();
