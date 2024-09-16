@@ -1,5 +1,18 @@
 #include "inc/philo.h"
 
+int	init_one_philo(t_data *data)
+{
+	int	time;
+
+	data->start_t = get_current_time();
+	time = get_current_time() - data->start_t;
+	printf("%d %d %s\n", time, data->philos[0].id, FORK);
+	ft_usleep(data->death_t, data);
+	time = get_current_time() - data->start_t;
+	printf("%d %d %s\n", time, data->philos[0].id, DEAD);
+	return (0);
+}
+
 void	*monitor(void	*data)
 {
 	t_data	*supervisor;
@@ -40,6 +53,8 @@ void	*routine(void	*argv)
 		ft_usleep(philo->data->eat_t / 2, philo->data);
 	while (philo->data->dead == 0 && philo->data->finished < philo->data->philo_num)
 	{
+		if (philo->meals_count == philo->data->meals_to_eat)
+			break ;
 		ft_eat(philo);
 		ft_messages(SLEEP, philo);
 		ft_usleep(philo->data->sleep_t, philo->data);

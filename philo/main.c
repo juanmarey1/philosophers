@@ -24,8 +24,21 @@ int	main(int argc, char *argv[])
 		return (1);
 	if (init_all(argv, &data))
 		return (1);
-	if (init_threads(&data))
-		return (1);
+	if (data.philo_num == 1)
+	{
+		if (init_one_philo(&data))
+			return (1);
+	}
+	else
+	{
+		if (init_threads(&data))
+			return (1);
+	}
+	for (int i = 0; i < data.philo_num; i++)
+	{
+		printf("%d\n", data.philos[i].meals_count);
+	}
+	
 	ft_destroy_data(&data);
 	return (0);
 }

@@ -69,6 +69,7 @@ void	ft_usleep(size_t	time, t_data *data);
 void	ft_eat(t_philo *philo);
 
 int	init_all(char **argv, t_data *data);
+int	init_one_philo(t_data *data);
 
 int		init_threads(t_data *data);
 void	ft_messages(char *str, t_philo *philo);
